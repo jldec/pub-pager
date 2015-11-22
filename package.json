@@ -1,0 +1,17 @@
+{
+  "name": "pub-pager",
+  "version": "1.0.0",
+  "description": "Client-side router and jquery view binding for pub-generator",
+  "main": "pager.js",
+  "dependencies": {
+    "debug": "^2.2.0",
+    "page": "^1.6.4"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jldec/pub-pager.git"
+  },
+  "author": "jurgen leschner",
+  "license": "MIT"
+}
