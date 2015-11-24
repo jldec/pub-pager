@@ -2,10 +2,11 @@
  * pub pager.js generator-plugin
  *
  * client-side router (visionmedia/page) plugin for pub-generator
- * translates window.click events for intra-site links to generator.nav events
+ * translates click events for intra-site links to generator.nav events
  * generator.nav events are then handled by jqueryview
  *
- * initialize by calling generator.initPager();
+ * initialize by calling pager = generator.initPager();
+ * pager.page will be set to the current page object, maintained after each nav
  *
  * NOTE: uses history.pushState, which doesn't work in older browers
  * copyright 2015, Jurgen Leschner - github.com/jldec - MIT license
@@ -22,27 +23,27 @@ module.exports = function(generator) {
     var u = generator.util;
     var opts = generator.opts;
     var log = opts.log;
-    var oldPage;
 
     // bind jqueryview
     var jqv = require('./jqueryview')(generator);
     jqv.start();
 
     // https://github.com/visionmedia/page.js
-    window.pager = require('page');
+    var pager = require('page');
 
-    window.pager('*', function(ctx, next) {
+    // initialize with current page
+    var href = u.get(pubRef, 'href', location.pathname)
+    pager.page = generator.page$[href];
+    debug('init ' + decodeURI(location) + (pager.page ? ' (ok)' : ' (undefined page)'));
+
+    pager('*', function(ctx, next) {
       var path = ctx.path;
-      var querystring = ctx.querystring;
 
       // strip origin from fq urls
       path = u.unPrefix(path, opts.appUrl);
 
       // strip static root (see /server/client/init-opts.js)
       path = u.unPrefix(path, opts.staticRoot);
-
-      // strip querystring
-      path = path.split('?')[0];
 
       var page = generator.findPage(path);
 
@@ -51,22 +52,19 @@ module.exports = function(generator) {
         return next();
       }
 
-      if (page !== oldPage) {
-        oldPage = page;
+      pager.page = page;
 
-        // set global pubRef.ctx
-        pubRef.ctx = ctx;
+      // simulate server-side request
+      generator.req = { query: u.parseUrlParams('?' + ctx.querystring) };
 
-        // simulate server-side request
-        generator.req = { query: querystring ? qs.parse(querystring) : {} };
-
-        // update view in DOM
-        debug('nav ' + path);
-        generator.emit('nav', page);
-      }
+      // update view in DOM
+      debug('nav ' + decodeURI(path));
+      generator.emit('nav', page);
     });
 
     // start pager
-    window.pager( {dispatch:false} ); // auto-dispatch loses hash.
+    pager( { decodeURLComponents:false, dispatch:false } ); // auto-dispatch loses hash.
+
+    return pager;
   };
 }

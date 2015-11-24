@@ -10,18 +10,24 @@ pub-pager is included with pub-server.
 
 Add `pub-pager` to the `generatorPlugins` key in your `pub-config`.
 
-Clients transition to single-page-app mode, by calling `generator.initPager()`
+Clients transition to single-page-app mode, by calling `initPager()`.
+
+`pager.page` will be set to the current page object, and maintained after each nav event.
 
 ```js
 $.getScript(pubRef.relPath + '/pub/_generator.js');
-window.onGeneratorLoaded = function(generator) { generator.initPager(); };
+window.onGeneratorLoaded = function(generator) {
+  pager = generator.initPager();
+  generator.on('after-update-view', addEventHandlers);
+  generator.on('before-update-view', removeEventHandlers);
+};
 ```
 
 ### How it works
 
 - `pager.js` loads the `page` module which takes over click events and manages browser history. Any internal link to another page will trigger a generator `nav` event.
 
-- `jqueryview.js` listens for generator 'nav', 'loaded', and 'updatedText' events and emits 'update-view' when content in the DOM has been replaced with newly generated HTML. This allows the same mechanism to be used for offline navigation as well as source changes in an editor.
+- `jqueryview.js` listens for generator 'nav', 'loaded', and 'updatedText' events and emits 'before-update-view' and 'after-update-view' when replacing content in the DOM with newly generated HTML. This allows the same mechanism to be used for offline navigation as well as source changes in an editor.
 
 ### html template guidelines
 

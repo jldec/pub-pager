@@ -55,18 +55,18 @@ module.exports = function(generator) {
     if (layoutChanged(page)) return updateLayout(page);
     var $page = $('[data-render-page]');
     if (!$page.length) return log('jqueryview cannot update page ' + path);
-    $page.html(generator.renderPage(page));
-    $page.attr('data-render-page', page._href);
-    generator.emit('update-view', $page);
+    generator.emit('before-update-view', $page);
+    $page.replaceWith(generator.renderPage(page));
+    generator.emit('after-update-view', $page);
     lastPage = page;
   }
 
   function updateLayout(page) {
     if (!page || !$layout.length) return;
     var layout = generator.layoutTemplate(page);
-    $layout.html(generator.renderLayout(page));
-    $layout.attr('data-render-layout', layout);
-    generator.emit('update-view', $layout);
+    generator.emit('before-update-view', $layout);
+    $layout.replaceWith(generator.renderLayout(page));
+    generator.emit('after-update-view', $layout);
     lastPage = page;
   }
 
@@ -87,8 +87,9 @@ module.exports = function(generator) {
     var $html = $('[data-render-html="' + href + '"]');
     if (!$html.length) return log('jqueryview cannot update html for fragment: ' + href);
 
-    $html.html(generator.renderHtml(fragment));
-    generator.emit('update-view', $html);
+    generator.emit('before-update-view', $html);
+    $html.replaceWith(generator.renderHtml(fragment));
+    generator.emit('after-update-view', $html);
   }
 
 }
