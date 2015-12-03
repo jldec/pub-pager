@@ -27,7 +27,9 @@ window.onGeneratorLoaded = function(generator) {
 
 - `pager.js` loads the `page` module which takes over click events and manages browser history. Any internal link to another page will trigger a generator `nav` event.
 
-- `jqueryview.js` listens for generator 'nav', 'loaded', and 'updatedText' events and emits 'before-update-view' and 'after-update-view' when replacing content in the DOM with newly generated HTML. This allows the same mechanism to be used for offline navigation as well as source changes in an editor.
+- `jqueryview.js` listens for generator 'nav', 'loaded', and 'updatedText' events and emits 'before-update-view' and 'after-update-view' when replacing content in the DOM with newly generated HTML.
+
+This allows the same mechanism to be used for offline navigation as well as source changes in an editor.
 
 ### html template guidelines
 
