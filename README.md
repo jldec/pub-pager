@@ -1,12 +1,14 @@
 # pub-pager
 
+> NOTE: this module is no longer being supported. pub-server uses [pub-preview](https://github.com/jldec/pub-preview) with very similar functionality but only used in the editor. This module emits `before-update-view` and `after-update-view` events, not available in pub-preview.
+
 * client-side router (visionmedia/page) plugin for pub-generator
 * translates window.click events for intra-site links to generator.nav events
 * generator.nav events are then handled by jqueryview to update the DOM
 
 ### Installation
 
-pub-pager is included with pub-server.
+pub-pager is not included with pub-server. To install, use `npm install --save-dev pub-pager`.
 
 Add `pub-pager` to the `generatorPlugins` key in your `pub-config`.
 
@@ -36,7 +38,6 @@ This allows the same mechanism to be used for offline navigation as well as sour
 When content is modified an attempt is made to determine whether the edit affects the layout, the page or fragment container, or just the  html rendered from markdown
 
 In order to maximize responsiveness, the editor relies on data attributes on html tags to replace just the affected HTML
-
 
 - `data-render-layout` = name of layout template - wrapper auto-inserted by {{{renderLayout}}})
 - `data-render-page` = name of page template - wrapper div auto-inserted by  {{{renderPage}}}

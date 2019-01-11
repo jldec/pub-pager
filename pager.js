@@ -9,7 +9,7 @@
  * pager.page will be set to the current page object, maintained after each nav
  *
  * NOTE: uses history.pushState, which doesn't work in older browers
- * copyright 2015, Jurgen Leschner - github.com/jldec - MIT license
+ * copyright 2015-2019, Jurgen Leschner - github.com/jldec - MIT license
  *
 */
 var debug = require('debug')('pub:pager');
